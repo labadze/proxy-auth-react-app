@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {exchangeAuthorizationCode} from "../../services/httpx.manager";
 
-class RedirectPage extends Component<{}, { [key: string]: any }> {
+class RedirectPage extends Component<any, { [key: string]: any }> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -16,7 +16,8 @@ class RedirectPage extends Component<{}, { [key: string]: any }> {
         if (code !== null && sessionState !== null) {
             const result = await exchangeAuthorizationCode(sessionState, code);
             if (result) {
-
+                // this.props.history.push(`/packages/details/${this.props.match.params.id}`);
+                this.props.history.push(`/`);
             }
         }
     }

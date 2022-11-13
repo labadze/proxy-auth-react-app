@@ -10,24 +10,6 @@ class UserDetailsPage extends Component<any, { [key: string]: any }> {
     }
 
     async componentDidMount() {
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_URL}/private/manage/users/${this.props.match.params.id}`,
-                {
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                    },
-                }
-            );
-            const json = await response.json();
-            this.setState({
-                userData: json["data"]
-            })
-        } catch (error) {
-            console.error(error);
-        }
     }
 
     render() {

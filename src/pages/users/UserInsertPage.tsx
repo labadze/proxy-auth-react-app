@@ -77,47 +77,7 @@ class UserInsertPage extends Component<any, { [key: string]: any }> {
 
     sendDataToServer = async () => {
         if (this.state.errorMessage === null) {
-            try {
-                const response = await fetch(
-                    `${process.env.REACT_APP_API_URL}/private/manage/users`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                        },
-                        body: JSON.stringify({
-                            first_name: this.state.firstName,
-                            last_name: this.state.lastName,
-                            pid: this.state.pid,
-                            phone_number: this.state.phoneNumber,
-                            electric_mail: this.state.electricMail,
-                        }),
-                    }
-                );
-                const json = await response.json();
-                if (response.status === 200) {
-                    console.log(json);
-                    // return <Redirect to={'/'} />
-                    this.props.history.push(`/users/details/${this.props.match.params.id}`);
-                } else {
-                    if (json.message === null) {
-                        this.setState({
-                            errorMessage: json["error"]
-                        });
-                    } else {
-                        this.setState({
-                            errorMessage: json["message"]
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-                this.setState({
-                    errorMessage: "Fetch wont work..."
-                });
-            }
+
         }
     }
 

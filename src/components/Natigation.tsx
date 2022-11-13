@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {obtainAuthorizationUrl} from "../services/httpx.manager";
+import {
+    obtainAuthorizationUrl,
+    obtainLogoutUrl,
+    terminateSession
+} from "../services/httpx.manager";
 
 class Navigation extends Component<any, { [key: string]: any }> {
     constructor(props: any) {
@@ -19,29 +23,7 @@ class Navigation extends Component<any, { [key: string]: any }> {
         if (this.state.currentRoute === null) {
             this.setState({currentRoute: window.location.pathname})
         }
-        // try {
-        //     const response = await fetch(
-        //         `${process.env.REACT_APP_API_URL}/`,
-        //         {
-        //             headers: {
-        //                 Accept: 'application/json',
-        //                 'Content-Type': 'application/json',
-        //                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        //             },
-        //         }
-        //     );
-        //     const json = await response.json();
-        //     if (response.status === 401 || response.status === 403) {
-        //         this.logOut();
-        //     } else {
-        //         this.setState({
-        //             displayName: json["data"]["first_name"]
-        //         });
-        //     }
-        //     console.log(json);
-        // } catch (error) {
-        //     console.error(error);
-        // }
+        // TODO: fetch current user
     }
 
     openNav = async () => {
@@ -56,29 +38,35 @@ class Navigation extends Component<any, { [key: string]: any }> {
         this.setState({navStyle: 'none', currentRoute: route})
     };
 
-    redirectToLoginResource = () => {
-        obtainAuthorizationUrl().then((authorizationUrl: string | null) => {
-            if (authorizationUrl === null) {
-                alert("Server returned an error");
-            }
-            if (typeof authorizationUrl === "string") {
-                window.location.href = authorizationUrl;
-            }
-        });
-
+    redirectToLoginResource = async (): Promise<void> => {
+        const urlResult = await obtainAuthorizationUrl();
+        if (urlResult === null) {
+            alert("Server returned an error");
+        }
+        if (typeof urlResult === "string") {
+            window.location.href = urlResult;
+        }
     }
 
-    logOut = () => {
-        localStorage.removeItem('access_token');
-        // this.props.history.push('/');
-        if (this.props.history) {
-            this.props.history.push({
-                pathname: "/",
-                state: null
-            });
+    logOut = async () => {
+        const logOutUrl = await obtainLogoutUrl();
+        if (logOutUrl === null) {
+            alert("Server returned an error");
         }
+        if (typeof logOutUrl === "string") {
+            // window.location.href = `${logOutUrl}?client_id=fapy&post_logout_redirect_uri=${encodeURIComponent(`http://localhost:3000`)}`
+            window.location.href = `${logOutUrl}?redirect_uri=${encodeURIComponent(`http://localhost:3000`)}`
+            // await terminateSession(logOutUrl);
+        }
+        // this.props.history.push('/');
+        // if (this.props.history) {
+        //     this.props.history.push({
+        //         pathname: "/",
+        //         state: null
+        //     });
+        // }
         // window.location.reload();
-        window.location.href = "/"
+        // window.location.href = `${logOutUrl}/${encodeURIComponent(`http://localhost:3000`)}`
     }
 
     render() {
@@ -94,18 +82,13 @@ class Navigation extends Component<any, { [key: string]: any }> {
                                 <Link to={''} onClick={() => {
                                     this.setState({currentRoute: '/'})
                                 }} className={"w3-bar-item w3-button"}>MAIN</Link>
-                                <Link to={'/customers'} onClick={() => {
-                                    this.setState({currentRoute: '/about'})
-                                }} className={"w3-bar-item w3-button"}>CUSTOMERS</Link>
                                 <Link to={'/users'} onClick={() => {
                                     this.setState({currentRoute: '/users'})
                                 }} className={"w3-bar-item w3-button"}>USERS</Link>
-                                <Link to={'/packages'} onClick={() => {
-                                    this.setState({currentRoute: '/packages'})
-                                }} className={"w3-bar-item w3-button"}>PACKAGES</Link>
-                                <button onClick={() => {
-                                    this.redirectToLoginResource()
-                                }} className={"w3-bar-item w3-button"}> LOG IN</button>
+                                <Link to={'/roles'} onClick={() => {
+                                    this.setState({currentRoute: '/roles'})
+                                }} className={"w3-bar-item w3-button"}>ROLES</Link>
+                                <button onClick={ this.redirectToLoginResource} className={"w3-bar-item w3-button"}> LOG IN</button>
                                 <button onClick={this.logOut} className={"w3-bar-item w3-button"}> LOG OUT</button>
                             </div>
 

@@ -25,25 +25,6 @@ class UserListPage extends Component<any, { [key: string]: any }> {
             isProgress: true,
         });
         await this.progressBar();
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_URL}/private/manage/users?limit=1000&offset=0`,
-                {
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                    },
-                }
-            );
-            const json = await response.json();
-            this.setState({
-                users: json["data"],
-                isProgress: false,
-            })
-        } catch (error) {
-            console.error(error);
-        }
     }
 
     closeDialog = () => {
@@ -81,26 +62,7 @@ class UserListPage extends Component<any, { [key: string]: any }> {
     findValueOnServer = async () => {
         this.setState({
             isLoading: true,
-        })
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_URL}/private/manage/search_user?search_term=${this.state.searchTerm}&cmd=${this.state.searchBy}`,
-                {
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                    },
-                }
-            );
-            const json = await response.json();
-            this.setState({
-                users: json['data'],
-                isLoading: false,
-            })
-        } catch (error) {
-            console.error(error);
-        }
+        });
     }
 
     _handleKeyDown = (e: any) => {

@@ -10,6 +10,7 @@ import UserInsertPage from "./pages/users/UserInsertPage";
 import UserDetailsPage from "./pages/users/UserDetailsPage";
 import UpdateUserPage from "./pages/users/UpdateUserPage";
 import RedirectPage from "./pages/auth/RedirectPage";
+import {currentUser} from "./services/httpx.manager";
 
 class App extends Component<any, { [key: string]: any }> {
   constructor(props: any) {
@@ -20,10 +21,10 @@ class App extends Component<any, { [key: string]: any }> {
   }
 
   async componentDidMount() {
-    const jwt = localStorage.getItem('access_token');
-    if (jwt !== null) {
+    const activeSession = await currentUser();
+    if (activeSession !== null) {
       this.setState({
-        accessToken: jwt,
+        accessToken: activeSession.session_key,
       });
     }
   }
@@ -32,7 +33,7 @@ class App extends Component<any, { [key: string]: any }> {
     return (
         <Router>
           <div>
-            {this.state.accessToken !== null ? (
+            {this.state.accessToken === null ? (
                 <div>
                   <Route exact path="/" component={AuthPage}/>
                 </div>

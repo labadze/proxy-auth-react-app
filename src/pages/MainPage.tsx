@@ -69,26 +69,6 @@ class MainPage extends Component<any, { [key: string]: any }> {
     }
 
     loadTodayAttends = async () => {
-        // try {
-        //     const response = await fetch(
-        //         `${process.env.REACT_APP_API_URL}/protected/today_attends`,
-        //         {
-        //             headers: {
-        //                 Accept: 'application/json',
-        //                 'Content-Type': 'application/json',
-        //                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        //             },
-        //         }
-        //     );
-        //     const json = await response.json();
-        //     // console.log(json);
-        //     this.setState({
-        //         customerVisits: json['data'],
-        //         isLoading: false
-        //     })
-        // } catch (error) {
-        //     console.error(error);
-        // }
     }
 
     async componentWillUnmount() {
