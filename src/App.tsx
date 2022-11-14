@@ -33,21 +33,15 @@ class App extends Component<any, { [key: string]: any }> {
     return (
         <Router>
           <div>
-            {this.state.accessToken === null ? (
-                <div>
-                  <Route exact path="/" component={AuthPage}/>
-                </div>
-            ) : (
-                <div>
-                  <Navigation history={this.props.history} />
-                  <Route exact path={"/"} component={MainPage}/>
-                  <Route exact path={"/callback"} component={RedirectPage}/>
-                  <Route exact path={"/users"} component={UserListPage}/>
-                  <Route exact path={"/users/insert"} component={UserInsertPage}/>
-                  <Route exact path={"/users/details/:id"} render={(props) => <UserDetailsPage {...props} /> } />
-                  <Route exact path={"/users/update/:id"} render={(props) => <UpdateUserPage {...props} /> } />
-                </div>
-            )}
+            <div>
+              <Navigation history={this.props.history} />
+              <Route exact path={"/"} component={MainPage}/>
+              <Route exact path={"/callback"} component={RedirectPage}/>
+              <Route exact path={"/users"} component={UserListPage}/>
+              <Route exact path={"/users/insert"} component={UserInsertPage}/>
+              <Route exact path={"/users/details/:id"} render={(props) => <UserDetailsPage {...props} /> } />
+              <Route exact path={"/users/update/:id"} render={(props) => <UpdateUserPage {...props} /> } />
+            </div>
           </div>
         </Router>
     );

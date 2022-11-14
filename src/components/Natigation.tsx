@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {
     obtainAuthorizationUrl,
-    obtainLogoutUrl,
-    terminateSession
+    obtainLogoutUrl
 } from "../services/httpx.manager";
 
 class Navigation extends Component<any, { [key: string]: any }> {
@@ -54,9 +53,7 @@ class Navigation extends Component<any, { [key: string]: any }> {
             alert("Server returned an error");
         }
         if (typeof logOutUrl === "string") {
-            // window.location.href = `${logOutUrl}?client_id=fapy&post_logout_redirect_uri=${encodeURIComponent(`http://localhost:3000`)}`
             window.location.href = `${logOutUrl}?redirect_uri=${encodeURIComponent(`http://localhost:3000`)}`
-            // await terminateSession(logOutUrl);
         }
         // this.props.history.push('/');
         // if (this.props.history) {
@@ -66,7 +63,7 @@ class Navigation extends Component<any, { [key: string]: any }> {
         //     });
         // }
         // window.location.reload();
-        // window.location.href = `${logOutUrl}/${encodeURIComponent(`http://localhost:3000`)}`
+        // window.location.href = `/`
     }
 
     render() {
