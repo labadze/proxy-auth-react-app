@@ -42,7 +42,7 @@ export const exchangeAuthorizationCode = async (sessionState: string, code: stri
 export const currentUser = async (): Promise<any> => {
     try {
         const response = await fetch(
-            `${process.env.REACT_APP_API_URL}`,
+            `${process.env.REACT_APP_API_URL}/private/account`,
             {
                 credentials: 'include',
                 headers: {
@@ -121,6 +121,26 @@ export const terminateSession = async (logOutUrl: string): Promise<void> => {
 
     } catch (error) {
         console.error(error);
+    }
+}
+
+export const retrieveItems = async (limit: number, offset: number): Promise<any> => {
+    try {
+        const response = await fetch(
+            `${process.env.REACT_APP_API_URL}/protected/items?limit=${limit}&offset=${offset}`,
+            {
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        const json = await response.json();
+        return json;
+    } catch (error) {
+        console.error(error);
+        return null;
     }
 }
 

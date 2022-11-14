@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {
+    currentUser,
     obtainAuthorizationUrl,
     obtainLogoutUrl
 } from "../services/httpx.manager";
@@ -52,6 +53,7 @@ class Navigation extends Component<any, { [key: string]: any }> {
         if (logOutUrl === null) {
             alert("Server returned an error");
         }
+        document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
         if (typeof logOutUrl === "string") {
             window.location.href = `${logOutUrl}?redirect_uri=${encodeURIComponent(`http://localhost:3000`)}`
         }
@@ -64,6 +66,11 @@ class Navigation extends Component<any, { [key: string]: any }> {
         // }
         // window.location.reload();
         // window.location.href = `/`
+    }
+
+    get_current_user = async (): Promise<void> => {
+        const currentUserData = currentUser();
+        console.log(currentUserData);
     }
 
     render() {

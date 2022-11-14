@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
+import {retrieveItems} from "../services/httpx.manager";
 
 // import {Redirect, Route} from "react-router-dom";
 
@@ -29,6 +30,8 @@ class MainPage extends Component<any, { [key: string]: any }> {
     }
 
     async componentDidMount() {
+        const itemsResult = await retrieveItems(10, 0);
+        console.log(itemsResult);
         // this.ws.onopen = () => {
         //     // on connecting, do nothing but log it to the console
         //     console.log('connected V latest 0.0.1')
