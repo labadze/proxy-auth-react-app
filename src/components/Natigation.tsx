@@ -14,6 +14,7 @@ class Navigation extends Component<any, { [key: string]: any }> {
             navStyle: 'none',
             currentRoute: null,
             displayName: null,
+            currentUserData: null,
         };
         this.logOut = this.logOut.bind(this);
         this.redirectToLoginResource = this.redirectToLoginResource.bind(this);
@@ -23,7 +24,8 @@ class Navigation extends Component<any, { [key: string]: any }> {
         if (this.state.currentRoute === null) {
             this.setState({currentRoute: window.location.pathname})
         }
-        // TODO: fetch current user
+
+        await this.getCurrentUser();
     }
 
     openNav = async () => {
@@ -53,9 +55,8 @@ class Navigation extends Component<any, { [key: string]: any }> {
         if (logOutUrl === null) {
             alert("Server returned an error");
         }
-        document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
         if (typeof logOutUrl === "string") {
-            window.location.href = `${logOutUrl}?redirect_uri=${encodeURIComponent(`http://localhost:3000`)}`
+            window.location.href = `${logOutUrl}?redirect_uri=${encodeURIComponent(`http://localhost:3000/callback`)}`
         }
         // this.props.history.push('/');
         // if (this.props.history) {
@@ -68,9 +69,18 @@ class Navigation extends Component<any, { [key: string]: any }> {
         // window.location.href = `/`
     }
 
-    get_current_user = async (): Promise<void> => {
-        const currentUserData = currentUser();
-        console.log(currentUserData);
+    getCurrentUser = async (): Promise<void> => {
+        const currentUserData = await currentUser();
+        if (currentUserData) {
+            this.setState({
+                currentUserData: currentUserData,
+            });
+        } else {
+            this.setState({
+                currentUserData: null,
+            });
+        }
+
     }
 
     render() {
@@ -86,14 +96,20 @@ class Navigation extends Component<any, { [key: string]: any }> {
                                 <Link to={''} onClick={() => {
                                     this.setState({currentRoute: '/'})
                                 }} className={"w3-bar-item w3-button"}>MAIN</Link>
+                                <Link to={'/items'} onClick={() => {
+                                    this.setState({currentRoute: '/items'})
+                                }} className={"w3-bar-item w3-button"}>ITEMS</Link>
                                 <Link to={'/users'} onClick={() => {
                                     this.setState({currentRoute: '/users'})
                                 }} className={"w3-bar-item w3-button"}>USERS</Link>
                                 <Link to={'/roles'} onClick={() => {
                                     this.setState({currentRoute: '/roles'})
                                 }} className={"w3-bar-item w3-button"}>ROLES</Link>
-                                <button onClick={ this.redirectToLoginResource} className={"w3-bar-item w3-button"}> LOG IN</button>
-                                <button onClick={this.logOut} className={"w3-bar-item w3-button"}> LOG OUT</button>
+                                {this.state.currentUserData === null ? (
+                                    <button onClick={ this.redirectToLoginResource} className={"w3-bar-item w3-button"}> LOG IN</button>
+                                ) : (
+                                    <button onClick={this.logOut} className={"w3-bar-item w3-button"}> LOG OUT</button>
+                                )}
                             </div>
 
                             <div className={"w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"}

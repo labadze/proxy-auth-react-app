@@ -86,7 +86,7 @@ export const obtainLogoutUrl = async (): Promise<string | null> => {
         const response = await fetch(
             `${process.env.REACT_APP_API_URL}/public/log_out`,
             {
-                // credentials: 'include',
+                credentials: 'include',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
@@ -101,30 +101,32 @@ export const obtainLogoutUrl = async (): Promise<string | null> => {
     }
 }
 
-export const terminateSession = async (logOutUrl: string): Promise<void> => {
-    const encodedLogoutUrl = Buffer.from('your string here').toString('base64');
+export const terminateSession = async (): Promise<boolean> => {
+    // const encodedLogoutUrl = Buffer.from('your string here').toString('base64');
     try {
         const response = await fetch(
-            `${process.env.REACT_APP_API_URL}/public/delete_cookie`,
+            `${process.env.REACT_APP_API_URL}/private/account/delete_cookie`,
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
-                    'keycloak_log_out_encoded_uri': encodedLogoutUrl
+                    // 'keycloak_log_out_encoded_uri': encodedLogoutUrl
                 },
             }
         );
-        const json = await response.json();
-        console.log(json);
+        const data = await response.json();
+        return data.success;
+
 
     } catch (error) {
         console.error(error);
+        return false;
     }
 }
 
-export const retrieveItems = async (limit: number, offset: number): Promise<any> => {
+export const retrieveItems = async (limit: number, offset: number): Promise<any | null> => {
     try {
         const response = await fetch(
             `${process.env.REACT_APP_API_URL}/protected/items?limit=${limit}&offset=${offset}`,
@@ -136,8 +138,7 @@ export const retrieveItems = async (limit: number, offset: number): Promise<any>
                 },
             }
         );
-        const json = await response.json();
-        return json;
+        return await response.json();
     } catch (error) {
         console.error(error);
         return null;

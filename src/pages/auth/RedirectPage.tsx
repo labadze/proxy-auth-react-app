@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {exchangeAuthorizationCode} from "../../services/httpx.manager";
+import {exchangeAuthorizationCode, terminateSession} from "../../services/httpx.manager";
 
 class RedirectPage extends Component<any, { [key: string]: any }> {
     constructor(props: any) {
@@ -18,6 +18,13 @@ class RedirectPage extends Component<any, { [key: string]: any }> {
             if (result) {
                 // this.props.history.push(`/packages/details/${this.props.match.params.id}`);
                 this.props.history.push(`/`);
+            }
+        } else {
+            const terminateResult = await terminateSession();
+            if (terminateResult) {
+                setTimeout(() => {
+                    this.props.history.push(`/`);
+                }, 3000);
             }
         }
     }
